@@ -1,0 +1,44 @@
+app-id: dev.k8slens.openlens
+runtime: org.freedesktop.Platform
+runtime-version: "22.08"
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: "22.08"
+command: open-lens
+separate-locales: false
+rename-icon: open-lens
+copy-icon: true
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --device=dri
+  - --talk-name=org.freedesktop.Notifications
+  - --filesystem=~/.kube
+modules:
+  - name: lens
+    buildsystem: simple
+    sources:
+      - type: file
+        url: https://github.com/beliys/OpenLens/releases/download/v6.3.0/OpenLens-6.3.0.amd64.deb
+        sha256: f27d2076e7e9b226cd0683c9f464aefe0c7c1e082916b9bdf7b72a6063ea96f5
+      - type: file
+        path: run.sh
+      - type: file
+        path: dev.k8slens.openlens.metainfo.xml
+      - type: file
+        path: dev.k8slens.openlens.desktop
+    build-commands:
+      - ar x OpenLens-6.3.0.amd64.deb
+      - rm OpenLens-6.3.0.amd64.deb
+      - tar xf data.tar.xz
+      - cp -r opt/OpenLens /app/OpenLens
+      - mkdir -p /app/share/icons/hicolor
+      - cp -r usr/share/icons/hicolor/* /app/share/icons/hicolor
+      - chmod -R a-s,go+rX,go-w "/app/OpenLens"
+      - install run.sh /app/bin/open-lens
+      - install -Dm644 dev.k8slens.openlens.desktop /app/share/applications/dev.k8slens.openlens.desktop
+      - install -Dm644 dev.k8slens.openlens.metainfo.xml /app/share/metainfo/dev.k8slens.openlens.metainfo.xml
+

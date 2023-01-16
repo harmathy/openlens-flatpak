@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=OpenLens
+Comment=The Kubernetes IDE
+Exec=open-lens %u
+Terminal=false
+Type=Application
+Icon=dev.k8slens.openlens
+Categories=Network;
